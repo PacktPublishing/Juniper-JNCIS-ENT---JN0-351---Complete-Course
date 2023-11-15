@@ -1,0 +1,91 @@
+## Last changed: 2018-11-09 08:52:43 AEST
+version 18.2R1.9;
+system {
+    login {
+        user lab {
+            uid 2000;
+            class super-user;
+            authentication {
+                encrypted-password "$1$84J5Maes$cni5Hrazbd/IEHr/50oY30"; ## SECRET-DATA
+            }
+        }
+    }
+    root-authentication {
+        encrypted-password "$1$3wX27FEA$8/YMqSk092wAbqkexszJ71"; ## SECRET-DATA
+        ssh-dsa "ssh-dss AAAAB3NzaC1kc3MAAACBAMQrfP2bZyBXJ6PC7XXZ+MzErI8Jl6jah5L4/O8BsfP2hC7EvRfNoX7MqbrtCX/9gUH9gChVuBCB+ERULMdgRvM5uGh
+C/gs4UX+4dBbfBgKYYwgmisM8EoT25m7qI8ybpl2YZvHNznvO8h7kr4kpYuQEpKvgsTdH/Jle4Uqnjv7DAAAAFQDZaqA6QAgbW3O/zveaLCIDj6p0dwAAAIB1iL+krWrXiD8NPpY
++w4dWXEqaV3bnobzPC4eyxQKBUCOr80Q5YBlWXVBHx9elwBWZwj0SF4hLKHznExnLerVsMuTMA846RbQmSz62vM6kGM13HFonWeQvWia0TDr78+rOEgWF2KHBSIxL51lmIDW8Gql
+9hJfD/Dr/NKP97w3L0wAAAIEAr3FkWU8XbYytQYEKxsIN9P1UQ1ERXB3G40YwqFO484SlyKyYCfaz+yNsaAJu2C8UebDIR3GieyNcOAKf3inCG8jQwjLvZskuZwrvlsz/xtcxSoA
+h9axJcdUfSJYMW/g+mD26JK1Cliw5rwp2nH9kUrJxeI7IReDp4egNkM4i15o= configurator@server1.he"; ## SECRET-DATA
+    }
+    host-name vSRX-1;
+    services {
+        ssh {
+            root-login allow;
+        }                             
+    }
+    syslog {
+        user * {
+            any emergency;
+        }
+        file messages {
+            any any;
+            authorization info;
+        }
+        file interactive-commands {
+            interactive-commands any;
+        }
+    }
+}
+security {
+    forwarding-options {
+        family {
+            mpls {
+                mode packet-based;
+            }
+        }
+    }
+}
+interfaces {
+    ge-0/0/0 {
+        unit 0 {
+            description "Management";                        
+            family inet {
+                address 10.2.99.2/24;
+            }
+        }
+    }
+    ge-0/0/1 {
+        unit 0 {                        
+            family inet {
+                address 10.2.7.1/30;
+            }
+        }
+    }
+    ge-0/0/2 {
+        unit 0 {
+            family inet {
+                address 10.2.6.1/30;
+            }
+        }
+    }
+    ge-0/0/4 {
+        unit 0 {
+            family inet {
+                address 10.2.11.1/24;
+            }
+        }
+    }
+    lo0 {                               
+        unit 0 {
+            family inet {
+                address 192.168.1.1/32;
+            }
+        }
+    }
+}
+routing-options {
+    static {
+        route 192.168.2.0/24 next-hop 10.2.99.1;
+    }
+}

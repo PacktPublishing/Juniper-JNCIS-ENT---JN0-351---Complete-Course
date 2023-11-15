@@ -1,0 +1,18 @@
+set system host-name SW2
+set system login user lab uid 2000
+set system login user lab class super-user
+set system login user lab authentication encrypted-password "$1$84J5Maes$cni5Hrazbd/IEHr/50oY30"
+set system services ftp
+set system services ssh root-login allow
+set system auto-snapshot
+set system syslog file interactive-commands interactive-commands any
+set system syslog file messages any alert
+set system syslog file messages authorization info
+set security forwarding-options family mpls mode packet-based
+set interfaces ge-0/0/1 unit 0 family ethernet-switching port-mode access
+set interfaces ge-0/0/1 unit 0 family ethernet-switching vlan members default
+set interfaces ge-0/0/2 unit 0 family ethernet-switching port-mode access
+set interfaces ge-0/0/2 unit 0 family ethernet-switching vlan members default
+set interfaces ge-0/0/3 unit 0 family ethernet-switching port-mode access
+set interfaces ge-0/0/3 unit 0 family ethernet-switching vlan members default
+set vlans default vlan-id 1

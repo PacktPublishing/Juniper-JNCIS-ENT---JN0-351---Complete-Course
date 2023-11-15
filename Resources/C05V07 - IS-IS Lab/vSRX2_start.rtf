@@ -1,0 +1,37 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 set version 12.1X47-D15.4\
+set system host-name vSRX2\
+set system root-authentication encrypted-password "$1$THGhphaG$iXcVXG6/7X5nAuzVTFyaf1"\
+set system login user lab uid 2000\
+set system login user lab class super-user\
+set system login user lab authentication encrypted-password "$1$7H1GbsRW$K8bwNJtuGVY2aoufxIdDX1"\
+set system services ssh\
+set system services web-management http interface ge-0/0/0.0\
+set system syslog user * any emergency\
+set system syslog file messages any any\
+set system syslog file messages authorization info\
+set system syslog file interactive-commands interactive-commands any\
+set interfaces ge-0/0/0 description Management\
+set interfaces ge-0/0/0 unit 0 family inet address 10.2.99.3/24\
+set interfaces ge-0/0/1 unit 0 family inet address 10.2.7.2/30\
+set interfaces ge-0/0/1 unit 0 family iso\
+set interfaces ge-0/0/2 unit 0 family inet address 10.2.6.2/30\
+set interfaces ge-0/0/2 unit 0 family iso\
+set interfaces ge-0/0/4 unit 0 family inet address 10.2.12.1/24\
+set interfaces ge-0/0/4 unit 0 family iso\
+set interfaces lo0 unit 0 description "loopback for default routing instance"\
+set interfaces lo0 unit 0 family inet address 10.0.0.2/32\
+set interfaces lo0 unit 0 family iso address 49.0052.0100.0000.0002.00\
+set routing-options static route 192.168.2.0/24 next-hop 10.2.99.1\
+set protocols isis interface ge-0/0/1.0\
+set protocols isis interface ge-0/0/2.0\
+set protocols isis interface ge-0/0/4.0 level 2 disable\
+set protocols isis interface lo0.0 passive\
+set security forwarding-options family mpls mode packet-based\
+set security forwarding-options family iso mode packet-based}

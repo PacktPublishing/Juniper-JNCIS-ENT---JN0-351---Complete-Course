@@ -1,0 +1,141 @@
+## Last changed: 2018-11-09 05:59:34 UTC
+version 18.2R1.9;
+system {
+    login {
+        user lab {
+            uid 2000;
+            class super-user;
+            authentication {
+                encrypted-password "$1$84J5Maes$cni5Hrazbd/IEHr/50oY30"; ## SECRET-DATA
+            }
+        }
+    }
+    root-authentication {
+        encrypted-password "$1$rUleI7B.$lzOAmvzh2qAcDdLXri2Cb/"; ## SECRET-DATA
+        ssh-dsa "ssh-dss AAAAB3NzaC1kc3MAAACBAMQrfP2bZyBXJ6PC7XXZ+MzErI8Jl6jah5L4/O8BsfP2hC7EvRfNoX7MqbrtCX/9gUH9gChVuBCB+ERULMdgRvM5uGh
+C/gs4UX+4dBbfBgKYYwgmisM8EoT25m7qI8ybpl2YZvHNznvO8h7kr4kpYuQEpKvgsTdH/Jle4Uqnjv7DAAAAFQDZaqA6QAgbW3O/zveaLCIDj6p0dwAAAIB1iL+krWrXiD8NPpY
++w4dWXEqaV3bnobzPC4eyxQKBUCOr80Q5YBlWXVBHx9elwBWZwj0SF4hLKHznExnLerVsMuTMA846RbQmSz62vM6kGM13HFonWeQvWia0TDr78+rOEgWF2KHBSIxL51lmIDW8Gql
+9hJfD/Dr/NKP97w3L0wAAAIEAr3FkWU8XbYytQYEKxsIN9P1UQ1ERXB3G40YwqFO484SlyKyYCfaz+yNsaAJu2C8UebDIR3GieyNcOAKf3inCG8jQwjLvZskuZwrvlsz/xtcxSoA
+h9axJcdUfSJYMW/g+mD26JK1Cliw5rwp2nH9kUrJxeI7IReDp4egNkM4i15o= configurator@server1.he"; ## SECRET-DATA
+    }
+    host-name vSRX2;
+    services {
+        ftp;
+        ssh {
+            root-login allow;
+        }                        
+    }
+    syslog {
+        user * {
+            any emergency;
+        }
+        file messages {
+            any any;
+            authorization info;
+        }
+        file interactive-commands {
+            interactive-commands any;
+        }
+    }
+}
+security {
+    forwarding-options {
+        family {
+            mpls {
+                mode packet-based;
+            }
+        }
+    }
+}                                       
+interfaces {
+    ge-0/0/0 {
+        description "Management";
+        unit 0 {
+            family inet {
+                address 10.2.99.3/24;
+            }
+        }
+    }
+    ge-0/0/1 {
+        unit 0 {
+            family inet {
+                address 10.2.7.2/30;
+            }
+        }
+    }
+    ge-0/0/2 {
+        unit 0 {
+            family inet {
+                address 10.2.6.2/30;
+            }
+        }
+    }
+    ge-0/0/4 {
+        unit 0 {
+            family inet {
+                address 10.2.12.1/24;
+            }
+        }
+    }
+    lo0 {
+        unit 0 {
+            description "loopback for default routing instance";
+            family inet {
+                address 192.168.1.1/32;
+            }
+        }
+    }
+}
+routing-options {
+    interface-routes {
+        rib-group inet default-to-instance_1;
+    }
+    static {
+        rib-group default-to-instance_1;
+        route 0.0.0.0/0 next-hop 10.2.99.1;
+        route 192.168.1.2/32 {
+            next-hop 10.2.6.1;
+            qualified-next-hop 10.2.7.1 {
+                preference 6;
+            }
+        }
+        route 192.168.1.1/32 {
+            next-hop 10.2.6.1;
+            qualified-next-hop 10.2.7.1 {
+                preference 6;
+            }
+        }
+        route 10.2.11.0/24 {
+            next-hop 10.2.6.1;
+            qualified-next-hop 10.2.7.1 {
+                preference 6;
+            }                           
+        }
+        route 192.168.2.2/32 next-hop 10.2.12.10;
+    }
+    rib-groups {
+        default-to-instance_1 {
+            import-rib [ inet.0 instance_1.inet.0 ];
+        }
+        instance_1-to-default {
+            import-rib [ instance_1.inet.0 inet.0 ];
+        }
+    }
+}
+routing-instances {
+    instance_1 {
+        instance-type virtual-router;
+        interface ge-0/0/1.0;
+        interface ge-0/0/2.0;
+        routing-options {
+            interface-routes {
+                rib-group inet instance_1-to-default;
+            }
+            static {
+                rib-group instance_1-to-inet.0;
+                route 172.20.112.0/24 next-hop [ 10.2.6.1 10.2.7.1 ];
+                route 192.168.1.0/30 next-hop [ 10.2.6.1 10.2.7.1 ];
+            }
+        }
+    }
+}

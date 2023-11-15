@@ -1,0 +1,40 @@
+set system host-name SW1
+set system login user lab uid 2000
+set system login user lab class super-user
+set system login user lab authentication encrypted-password "$1$84J5Maes$cni5Hrazbd/IEHr/50oY30"
+set system services ftp
+set system services ssh root-login allow
+set system services telnet
+set system services web-management http
+set system auto-snapshot
+set system syslog file interactive-commands interactive-commands any
+set system syslog file messages any alert
+set system syslog file messages authorization info
+set interfaces ge-0/0/0 vlan-tagging
+set interfaces ge-0/0/0 unit 99 vlan-id 99
+set interfaces ge-0/0/0 unit 99 family inet address 10.1.99.2/24
+set interfaces ge-0/0/1 unit 0 family ethernet-switching port-mode trunk
+set interfaces ge-0/0/1 unit 0 family ethernet-switching vlan members all
+set interfaces fe-0/0/2 unit 0 family inet address 10.0.11.100/24
+set interfaces fe-0/0/3 unit 0 family inet address 10.0.12.100/24
+set interfaces fe-0/0/5 unit 0 family ethernet-switching port-mode trunk
+set interfaces fe-0/0/5 unit 0 family ethernet-switching vlan members all
+deactivate interfaces fe-0/0/5
+set interfaces vlan unit 11 family inet address 10.0.11.10/24
+set interfaces vlan unit 12 family inet address 10.0.12.10/24
+set routing-instances vr11 instance-type virtual-router
+set routing-instances vr11 routing-options static route 0.0.0.0/0 next-hop 10.0.11.1
+set routing-instances vr11 interface fe-0/0/2.0
+set routing-instances vr12 instance-type virtual-router
+set routing-instances vr12 routing-options static route 0.0.0.0/0 next-hop 10.0.12.1
+set routing-instances vr12 interface fe-0/0/3.0
+set routing-options static route 0.0.0.0/0 next-hop 10.1.99.1
+set protocols rstp bridge-priority 4k
+set protocols rstp interface ge-0/0/1 mode point-to-point 
+set security forwarding-options family mpls mode packet-based
+deactivate protocols rstp
+set vlans default vlan-id 1             
+set vlans v11 vlan-id 11
+set vlans v11 l3-interface vlan.11
+set vlans v12 vlan-id 12
+set vlans v12 l3-interface vlan.12
